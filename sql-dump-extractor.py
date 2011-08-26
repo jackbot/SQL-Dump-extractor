@@ -1,5 +1,4 @@
-#!/usr/bin/python
-
+#!/usr/bin/env python
 
 # SQL file dumper - extracts single SQL dumps from a larger multiple database dump
 # Jack Weeden <ajack.org> 2011
@@ -7,14 +6,15 @@
 import sys
 import os.path
 
-
 def listDatabases(path):
 	""" Reads in an SQL dump from a file and creates a list of the database names and their positions in the file """
+
 	print 'Loading file...\n'
 	databases = []
 	line_count = 0
 	sql_file = open(path)
 	lines = sql_file.readlines()
+
 	for line in lines:
 		line_count += 1
 		if line[0:12] == '-- Database:':
@@ -25,13 +25,13 @@ def listDatabases(path):
 	
 	# Check to see if there were any databases in the file
 	if len(databases) == 0:
-		print 'No databases found'
-		sys.exit(0)
+		print 'No databases found (or file contains a single database)'
+		exit(0)
 
 	# Print out the findings and prompt for a number of database to extract
 	i = 1
 	for db in databases:
-		print "[" + str(i) + "] " + db[1]
+		print "[%s] %s" % (str(i), db[1])
 		i += 1
 	
 	the_db = -1
@@ -46,7 +46,8 @@ def listDatabases(path):
 	
 	
 def extractDbName(db_name):
-	""" Takes a string in the form '-- Database: `MyDbName`' and returns the text between the first two `` characters """
+	""" Takes a line from a MySQL dump file and returns the database name. """
+	
 	ret = ''
 	backtick_count = 0
 	for i in db_name:
@@ -56,6 +57,7 @@ def extractDbName(db_name):
 			return ret
 		else:
 			if backtick_count == 1 and i != '`': ret += i
+
 
 def extractDatabase(sql_file, databases, num, name, start_line):
 	""" Extracts the nth database from the sql file """
@@ -97,7 +99,7 @@ if __name__ == "__main__":
 		usage()
 	else:
 		# Check if the file exists
-		if (os.path.isfile(sys.argv[1])):
+		if os.path.isfile(sys.argv[1]):
 			listDatabases(sys.argv[1])
 		else:
 			print sys.argv[1] + ' is not a file'
