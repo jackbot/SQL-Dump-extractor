@@ -2,7 +2,7 @@ The script takes in the file path of a MySQL dump and lists each database it fin
 
 Usage:
 
-	$ chmod +x sql_extractor.py
-	$ ./sql_extractor.py /path/to/sql_dump_file
+	$ chmod +x sql-dump-extractor.py
+	$ ./sql-dump-extractor.py /path/to/sql_dump_file
 
 	
